@@ -10,6 +10,10 @@ const navLinkss = document.querySelector('.nav__links');
 const opTab = document.querySelectorAll('.operations__tab');
 const opTabContainer = document.querySelector('.operations__tab-container');
 const opTabContent = document.querySelectorAll('.operations__content');
+const header = document.querySelector('.header');
+const nav = document.querySelector('.nav');
+const navLogo = document.querySelector('.nav__logo');
+const navLinks = document.querySelector('.nav__links');
 
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
@@ -68,3 +72,32 @@ opTabContainer.addEventListener('click', function (e) {
     )
     .classList.add('operations__content--active');
 });
+
+const handelrHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const activeHover = e.target;
+    const siblings = activeHover.closest('.nav').querySelectorAll('.nav__link');
+    siblings.forEach(sib => {
+      if (sib !== activeHover) sib.style.opacity = this;
+    });
+    navLogo.style.opacity = this;
+  }
+};
+nav.addEventListener('mouseover', handelrHover.bind(0.5));
+nav.addEventListener('mouseout', handelrHover.bind(1));
+
+const navHeight = nav.getBoundingClientRect().height;
+const obCallback = function (entreies, observer) {
+  entreies.forEach(entrei => {
+    entrei.isIntersecting
+      ? nav.classList.remove('sticky')
+      : nav.classList.add('sticky');
+  });
+};
+const obOprations = {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+};
+const observer = new IntersectionObserver(obCallback, obOprations);
+observer.observe(header);

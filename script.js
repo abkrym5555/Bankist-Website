@@ -15,6 +15,7 @@ const nav = document.querySelector('.nav');
 const navLogo = document.querySelector('.nav__logo');
 const navLinks = document.querySelector('.nav__links');
 const allSections = document.querySelectorAll('.section');
+const lazImg = document.querySelectorAll('img[data-src]');
 
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
@@ -112,7 +113,7 @@ const secCallback = function (entreies, observe) {
   entreies.forEach(entrei => {
     if (!entrei.isIntersecting) return;
     entrei.target.classList.remove('section--hidden');
-    secObserver.unobserve(entrei.target);
+    observe.unobserve(entrei.target);
   });
 };
 const secOpr = {
@@ -123,4 +124,25 @@ const secObserver = new IntersectionObserver(secCallback, secOpr);
 allSections.forEach(function (sec) {
   secObserver.observe(sec);
   sec.classList.add('section--hidden');
+});
+
+//img lazy
+const imgCallback = function (entreies, observe) {
+  entreies.forEach(entrei => {
+    if (!entrei.isIntersecting) return;
+    entrei.target.src = entrei.target.dataset.src;
+    entrei.target.addEventListener('load', function (e) {
+      entrei.target.classList.remove('lazy-img');
+    });
+    observe.unobserve(entrei.target);
+  });
+};
+const imgOpr = {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+};
+const imgObserv = new IntersectionObserver(imgCallback, imgOpr);
+lazImg.forEach(img => {
+  imgObserv.observe(img);
 });

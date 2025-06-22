@@ -14,6 +14,7 @@ const header = document.querySelector('.header');
 const nav = document.querySelector('.nav');
 const navLogo = document.querySelector('.nav__logo');
 const navLinks = document.querySelector('.nav__links');
+const allSections = document.querySelectorAll('.section');
 
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
@@ -46,6 +47,7 @@ btnScrollTo.addEventListener('click', function (e) {
   });
 });
 
+//go smooth
 navLinkss.addEventListener('click', function (e) {
   e.preventDefault();
   const targetElem = e.target;
@@ -55,6 +57,7 @@ navLinkss.addEventListener('click', function (e) {
   }
 });
 
+// transation button
 opTabContainer.addEventListener('click', function (e) {
   e.preventDefault();
   const activButt = e.target.closest('.operations__tab');
@@ -73,6 +76,7 @@ opTabContainer.addEventListener('click', function (e) {
     .classList.add('operations__content--active');
 });
 
+//nav hover
 const handelrHover = function (e) {
   if (e.target.classList.contains('nav__link')) {
     const activeHover = e.target;
@@ -86,18 +90,37 @@ const handelrHover = function (e) {
 nav.addEventListener('mouseover', handelrHover.bind(0.5));
 nav.addEventListener('mouseout', handelrHover.bind(1));
 
+//stickey nav
 const navHeight = nav.getBoundingClientRect().height;
-const obCallback = function (entreies, observer) {
+const navObCallback = function (entreies, observer) {
   entreies.forEach(entrei => {
     entrei.isIntersecting
       ? nav.classList.remove('sticky')
       : nav.classList.add('sticky');
   });
 };
-const obOprations = {
+const navObOprations = {
   root: null,
   threshold: 0,
   rootMargin: `-${navHeight}px`,
 };
-const observer = new IntersectionObserver(obCallback, obOprations);
-observer.observe(header);
+const navObserver = new IntersectionObserver(navObCallback, navObOprations);
+navObserver.observe(header);
+
+//section load
+const secCallback = function (entreies, observe) {
+  entreies.forEach(entrei => {
+    if (!entrei.isIntersecting) return;
+    entrei.target.classList.remove('section--hidden');
+    secObserver.unobserve(entrei.target);
+  });
+};
+const secOpr = {
+  root: null,
+  threshold: 0,
+};
+const secObserver = new IntersectionObserver(secCallback, secOpr);
+allSections.forEach(function (sec) {
+  secObserver.observe(sec);
+  sec.classList.add('section--hidden');
+});
